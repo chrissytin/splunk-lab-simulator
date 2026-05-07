@@ -5,7 +5,8 @@ const flowPath = [
   { tier: 'DATA SOURCES', color: '#3b82f6', items: ['linux-logs','windows-logs','firewall-syslog','api-data','hec','app-logs'] },
   { tier: 'FORWARDERS', color: '#f59e0b', items: ['uf','hf'] },
   { tier: 'INDEXERS', color: '#65A637', items: ['indexer'] },
-  { tier: 'SEARCH HEAD', color: '#8b5cf6', items: ['searchhead'] }
+  { tier: 'SEARCH HEAD', color: '#8b5cf6', items: ['searchhead'] },
+  { tier: 'ES SUITE', color: '#ef4444', items: ['es','sa-utils','da-network','sa-detections','sa-threatintel'] }
 ]
 const mgmtNodes = ['deploymentserver','licensermanager','monitoringconsole']
 
