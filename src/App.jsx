@@ -1,5 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { components, confFiles, concepts, scenarios, quizQuestions } from './data/splunkData'
+import DataFlowView from './components/DataFlowView'
+import ESUseCases from './components/ESUseCases'
 import ArchitectureView from './components/ArchitectureView'
 import ConfExplorer from './components/ConfExplorer'
 import LearningMode from './components/LearningMode'
@@ -8,10 +10,12 @@ import Quiz from './components/Quiz'
 import SearchResults from './components/SearchResults'
 
 const tabs = [
+  { id: 'dataflow', label: 'Data Flow', icon: '🌊' },
   { id: 'architecture', label: 'Architecture', icon: '🏗️' },
   { id: 'conf', label: '.conf Explorer', icon: '📄' },
   { id: 'learning', label: 'Learning', icon: '📚' },
   { id: 'scenarios', label: 'Scenarios', icon: '🧪' },
+  { id: 'es-usecases', label: 'ES Cases', icon: '🛡️' },
   { id: 'quiz', label: 'Quiz', icon: '✅' },
 ]
 
@@ -93,10 +97,12 @@ function App() {
 
       {/* Content */}
       <main className="max-w-7xl mx-auto px-4 py-6 pb-24 md:pb-6">
+        {activeTab === 'dataflow' && <DataFlowView />}
         {activeTab === 'architecture' && <ArchitectureView />}
         {activeTab === 'conf' && <ConfExplorer />}
         {activeTab === 'learning' && <LearningMode />}
         {activeTab === 'scenarios' && <Scenarios />}
+        {activeTab === 'es-usecases' && <ESUseCases />}
         {activeTab === 'quiz' && <Quiz />}
       </main>
 
