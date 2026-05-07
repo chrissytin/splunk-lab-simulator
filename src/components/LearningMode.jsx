@@ -31,14 +31,14 @@ export default function LearningMode() {
         />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
         {concepts.map((c, i) => (
           <div
             key={c.id}
             className={`flip-card ${flipped.has(c.id) ? 'flipped' : ''} animate-fade-up`}
-            style={{ animationDelay: `${i * 0.05}s`, minHeight: '200px' }}
+            style={{ animationDelay: `${i * 0.05}s`, minHeight: '180px' }}
           >
-            <div className="flip-card-inner" style={{ minHeight: '200px' }}>
+            <div className="flip-card-inner" style={{ minHeight: '180px' }}>
               {/* Front */}
               <div className="flip-card-front">
                 <button

@@ -17,16 +17,16 @@ export default function ConfExplorer() {
   const data = confFiles.find(f => f.id === active)
 
   return (
-    <div className="animate-fade-in flex gap-6">
+    <div className="animate-fade-in flex flex-col md:flex-row gap-4 md:gap-6">
       {/* Sidebar */}
-      <div className="w-56 shrink-0">
-        <h2 className="text-lg font-bold mb-3" style={{fontFamily:'JetBrains Mono, monospace'}}>.conf Files</h2>
-        <div className="space-y-1">
+      <div className="md:w-56 shrink-0">
+        <h2 className="text-lg font-bold mb-2 md:mb-3" style={{fontFamily:'JetBrains Mono, monospace'}}>.conf Files</h2>
+        <div className="flex md:flex-col gap-1 overflow-x-auto md:overflow-visible pb-2 md:pb-0 -mx-4 px-4 md:mx-0 md:px-0">
           {confFiles.map(f => (
             <button
               key={f.id}
               onClick={() => { setActive(f.id); setExpandedSample(0) }}
-              className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-all ${
+              className={`shrink-0 md:shrink md:w-auto text-left px-3 py-2 rounded-lg text-sm transition-all ${
                 active === f.id
                   ? 'bg-[var(--accent)]/15 border border-[var(--accent)]/30 text-[var(--accent-bright)]'
                   : 'hover:bg-[var(--bg-card)] text-[var(--text-muted)]'

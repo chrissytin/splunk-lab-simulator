@@ -10,11 +10,11 @@ export default function Scenarios() {
 
   return (
     <div className="animate-fade-in">
-      <h2 className="text-2xl font-bold mb-1" style={{fontFamily:'JetBrains Mono, monospace'}}>Scenarios</h2>
-      <p className="text-[var(--text-muted)] text-sm mb-6">Step-by-step guides for common Splunk tasks.</p>
+      <h2 className="text-xl md:text-2xl font-bold mb-1" style={{fontFamily:'JetBrains Mono, monospace'}}>Scenarios</h2>
+      <p className="text-[var(--text-muted)] text-xs md:text-sm mb-4 md:mb-6">Step-by-step guides for common Splunk tasks.</p>
 
       {!scenario ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
           {scenarios.map((s, i) => (
             <button
               key={s.id}

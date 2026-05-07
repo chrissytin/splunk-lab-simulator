@@ -83,10 +83,16 @@ code, pre, .font-mono {
   background: #0d1117;
   border: 1px solid var(--border);
   border-radius: 8px;
-  padding: 16px;
+  padding: 12px;
+  -webkit-overflow-scrolling: touch;
   overflow-x: auto;
-  font-size: 13px;
-  line-height: 1.6;
+  font-size: 12px;
+  line-height: 1.5;
+  white-space: pre;
+  word-break: normal;
+}
+@media (min-width: 768px) {
+  .code-block { padding: 16px; font-size: 13px; line-height: 1.6; }
 }
 
 .code-block .comment { color: #6a737d; }

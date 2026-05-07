@@ -57,7 +57,8 @@ function App() {
             <span className="text-xl">🟢</span>
             <span className="font-bold text-sm tracking-wide" style={{fontFamily:'JetBrains Mono, monospace'}}>Splunk Lab</span>
           </div>
-          <div className="flex gap-1 overflow-x-auto">
+          {/* Desktop tabs */}
+          <div className="hidden md:flex gap-1 overflow-x-auto">
             {tabs.map(t => (
               <button
                 key={t.id}
@@ -72,8 +73,8 @@ function App() {
               </button>
             ))}
           </div>
-          <div className="flex-1" />
-          <div className="relative">
+          <div className="flex-1 hidden md:block" />
+          <div className="relative hidden md:block">
             <input
               ref={searchRef}
               type="text"
@@ -91,13 +92,60 @@ function App() {
       </nav>
 
       {/* Content */}
-      <main className="max-w-7xl mx-auto px-4 py-6">
+      <main className="max-w-7xl mx-auto px-4 py-6 pb-24 md:pb-6">
         {activeTab === 'architecture' && <ArchitectureView />}
         {activeTab === 'conf' && <ConfExplorer />}
         {activeTab === 'learning' && <LearningMode />}
         {activeTab === 'scenarios' && <Scenarios />}
         {activeTab === 'quiz' && <Quiz />}
       </main>
+
+      {/* Mobile bottom nav */}
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 border-t border-[var(--border)] bg-[var(--bg-primary)]/95 backdrop-blur-md">
+        <div className="flex items-center justify-around py-2 px-1">
+          {tabs.map(t => (
+            <button
+              key={t.id}
+              onClick={() => setActiveTab(t.id)}
+              className={`flex flex-col items-center gap-0.5 px-1.5 py-1 rounded-lg transition-all ${
+                activeTab === t.id ? 'text-[var(--accent)]' : 'text-[var(--text-dim)]'
+              }`}
+            >
+              <span className="text-base">{t.icon}</span>
+              <span className="text-[9px] font-semibold leading-tight">{t.label}</span>
+            </button>
+          ))}
+          <button
+            onClick={() => document.getElementById('mobile-search')?.classList.remove('hidden')}
+            className="flex flex-col items-center gap-0.5 px-1.5 py-1 rounded-lg text-[var(--text-dim)]"
+          >
+            <span className="text-base">🔍</span>
+            <span className="text-[9px] font-semibold leading-tight">Search</span>
+          </button>
+        </div>
+      </nav>
+
+      {/* Mobile search overlay */}
+      <div id="mobile-search" className="hidden md:hidden fixed inset-0 z-[60] bg-[var(--bg-primary)]/98 p-4 pt-8">
+        <div className="flex items-center gap-2 mb-4">
+          <input
+            type="text"
+            placeholder="Search concepts, .conf files…"
+            value={searchQuery}
+            onChange={e => handleSearch(e.target.value)}
+            autoFocus
+            className="flex-1 bg-[var(--bg-card)] border border-[var(--border)] rounded-lg px-4 py-3 text-sm text-[var(--text)] placeholder-[var(--text-dim)] focus:outline-none focus:border-[var(--accent)]"
+            style={{fontFamily:'JetBrains Mono, monospace'}}
+          />
+          <button
+            onClick={() => { document.getElementById('mobile-search')?.classList.add('hidden'); setShowSearch(false); setSearchQuery('') }}
+            className="text-sm text-[var(--text-muted)] px-3 py-3 shrink-0"
+          >
+            Cancel
+          </button>
+        </div>
+        {showSearch && <SearchResults query={searchQuery} navigateTo={(tab) => { navigateTo(tab); document.getElementById('mobile-search')?.classList.add('hidden') }} />}
+      </div>
     </div>
   )
 }
