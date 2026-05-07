@@ -79,6 +79,19 @@ export const scenarios = [
     { title:'Define server class', action:'Group forwarders and assign the app.', conf:'serverclass.conf', location:'/opt/splunk/etc/system/local/serverclass.conf', config:`[serverClass:LinuxForwarders]\nwhitelist.0 = 10.0.2.*\nmachineTypesFilter = linux-*\n\n[serverClass:LinuxForwarders:app:TA-linux-logs]\nstateOnClient = enabled\nrestartSplunkd = true` },
     { title:'Configure deploymentclient.conf on UFs', action:'Point each UF to the Deployment Server.', conf:'deploymentclient.conf', location:'/opt/splunkforwarder/etc/system/local/deploymentclient.conf', config:`[deployment-client]\nphoneHomeIntervalInSecs = 60\n\n[target-broker:deploymentServer]\ntargetUri = https://10.0.1.5:8089` },
     { title:'Monitor deployment status', action:'Check DS dashboard for deployment status and UF check-ins.', detail:'splunk show deploy-clients' }
+  ]},
+  { id:'install-es', title:'Install Splunk Enterprise Security', icon:'🛡️', components:['Search Head'], steps:[
+    { title:'Download ES from Splunkbase', action:'Go to splunkbase.splunk.com/app/263 and download the .spl file. Requires a free Splunk.com account.', detail:'wget -O /tmp/splunk_enterprise_security.spl "https://splunkbase.splunk.com/app/263/release/download" --header="Authorization: Bearer <token>"' },
+    { title:'Transfer the .spl file to your Splunk server', action:'Upload the file via SCP or the Splunk Web UI.', detail:'scp splunk_enterprise_security.spl root@your-server:/tmp/' },
+    { title:'Install the app via CLI', action:'Use the splunk install app command to install ES.', conf:'app.conf', location:'/opt/splunk/bin/', config:`/opt/splunk/bin/splunk install app /tmp/splunk_enterprise_security.spl -auth admin:your_password` },
+    { title:'Restart Splunk', action:'ES requires a full restart after installation.', detail:'/opt/splunk/bin/splunk restart' },
+    { title:'Run ES setup', action:'Open Splunk Web → Enterprise Security app → follow the setup wizard. Configure indexes, add data sources, and enable notable events.', config:`# ES creates these key indexes during setup:
+# summary — correlation and risk data
+# notable — notable events
+# risk — risk scoring
+# threat — threat intelligence
+# ess — ES session data` },
+    { title:'Verify ES is running', action:'Check that SA- and DA- apps appear in /opt/splunk/etc/apps/ and the ES dashboard loads in Splunk Web.', detail:'ls /opt/splunk/etc/apps/ | grep -E "^SA-|^DA-|^SplunkEnterpriseSecurity"' }
   ]}
 ];
 
@@ -97,5 +110,7 @@ export const quizQuestions = [
   { id:12, question:'Which component distributes searches across indexers?', options:['Deployment Server','License Manager','Search Head','Heavy Forwarder'], correct:2, explanation:'The Search Head distributes SPL queries to all indexers, collects partial results, and merges them into the final result set.' },
   { id:13, question:'What does HEC stand for and what is it used for?', options:['Heavy Event Collector — for large events','HTTP Event Collector — API-based data ingestion','Host Event Counter — for metrics','Hybrid Event Cache — for buffering'], correct:1, explanation:'HTTP Event Collector lets apps send JSON events to Splunk over HTTPS using tokens. Ideal for microservices and cloud-native apps.' },
   { id:14, question:'When would you use a Heavy Forwarder instead of a Universal Forwarder?', options:['When you need to save disk space','When you need to parse, filter, or route data before indexing','When you have less than 10 servers','When you don\'t need search'], correct:1, explanation:'Heavy Forwarders parse, filter, and route data at the edge (e.g., syslog collection, applying props/transforms) before forwarding to indexers.' },
-  { id:15, question:'What does serverclass.conf define?', options:['Indexer cluster membership','Search head distribution','Deployment Server groups and app assignments','License server classes'], correct:2, explanation:'serverclass.conf on the Deployment Server defines groups of forwarders (server classes) and which apps are deployed to each group.' }
+  { id:15, question:'What does serverclass.conf define?', options:['Indexer cluster membership','Search head distribution','Deployment Server groups and app assignments','License server classes'], correct:2, explanation:'serverclass.conf on the Deployment Server defines groups of forwarders (server classes) and which apps are deployed to each group.' },
+  { id:16, question:'What prefix do Splunk Enterprise Security add-ons use?', options:['TA- and app-','SA- and DA-','ES- and SEC-','IDX- and SH-'], correct:1, explanation:'ES uses SA- (Supporting Add-ons) and DA- (Domain Add-ons). SA- provide data models and configs, DA- provide domain-specific knowledge (network, access, etc.).' },
+  { id:17, question:'What must you do after installing Splunk Enterprise Security?', options:['Nothing, it auto-configures','Restart Splunk and run the ES setup wizard','Reinstall Splunk Enterprise','Delete all existing indexes'], correct:1, explanation:'ES requires a restart after installation, then you must run the setup wizard to configure indexes, data sources, and enable notable events.' }
 ];
