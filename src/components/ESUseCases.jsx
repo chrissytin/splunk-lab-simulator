@@ -15,7 +15,8 @@ const useCases = [
       { step: '3', emoji: '🚨', text: 'Notable event fires: "Phishing email detected"' },
       { step: '4', emoji: '🛑', text: 'Security team blocks the email before Sarah sees it' },
     ],
-    spl: 'index=email sourcetype="mail" | search sender=*@suspicious.com OR url=*phishing-site.com'
+    spl: 'index=email sourcetype="mail" | search sender=*@suspicious.com OR url=*phishing-site.com',
+    soar: '🤖 SOAR auto-blocks the sender domain, quarantines the email from all inboxes, and notifies the security team via Slack.'
   },
   {
     id: 'suspicious-login',
@@ -31,7 +32,8 @@ const useCases = [
       { step: '3', emoji: '🚨', text: 'ES correlation search fires: "Impossible travel detected"' },
       { step: '4', emoji: '🔒', text: 'Account is locked, Dave gets a phone call to verify' },
     ],
-    spl: 'index=security action=login | iplocation src_ip | stats count by user, City, Country | where Country!="Australia"'
+    spl: 'index=security action=login | iplocation src_ip | stats count by user, City, Country | where Country!="Australia"',
+    soar: '🤖 SOAR auto-locks the account, forces a password reset, and sends the user a verification text message.'
   },
   {
     id: 'ransomware',
@@ -47,7 +49,8 @@ const useCases = [
       { step: '3', emoji: '🚨', text: 'ES fires: "Mass file encryption — possible ransomware!"' },
       { step: '4', emoji: '🔌', text: 'Network team disconnects the computer immediately' },
     ],
-    spl: 'index=security sourcetype=win_security EventCode=4663 | stats count by host, file_path | where count > 100'
+    spl: 'index=security sourcetype=win_security EventCode=4663 | stats count by host, file_path | where count > 100',
+    soar: '🤖 SOAR auto-isolates the computer from the network, blocks the malware\'s communication, and creates an emergency ticket.'
   },
   {
     id: 'insider-threat',
@@ -63,7 +66,8 @@ const useCases = [
       { step: '3', emoji: '🚨', text: 'ES fires: "Employee risk score exceeded threshold"' },
       { step: '4', emoji: '👥', text: 'HR and security talk to Tom, restrict his access' },
     ],
-    spl: 'index=security action=file_download | stats sum(file_size) as total_mb by user | where total_mb > 500'
+    spl: 'index=security action=file_download | stats sum(file_size) as total_mb by user | where total_mb > 500',
+    soar: '🤖 SOAR auto-restricts the user\'s file access, flags their account for monitoring, and alerts HR.'
   },
   {
     id: 'network-anomaly',
@@ -79,7 +83,24 @@ const useCases = [
       { step: '3', emoji: '🚨', text: 'ES fires: "Large data transfer to unknown destination"' },
       { step: '4', emoji: '🧹', text: 'Malware is found and removed, the data leak is stopped' },
     ],
-    spl: 'index=network action=allowed | stats sum(bytes) as total_bytes by src_ip, dest_ip | where total_bytes > 5000000000'
+    spl: 'index=network action=allowed | stats sum(bytes) as total_bytes by src_ip, dest_ip | where total_bytes > 5000000000',
+    soar: '🤖 SOAR auto-blocks the destination IP at the firewall, isolates the infected laptop, and starts a forensic investigation.'
+  },
+  {
+    id: 'soar-overview',
+    title: 'How SOAR Responds',
+    icon: '🤖',
+    severity: 'Auto',
+    color: '#06b6d4',
+    simple: 'When ES rings the alarm, SOAR is the robot that immediately takes action — no waiting for a human to wake up.',
+    story: 'It\'s 3am and ES detects a ransomware attack. Without SOAR, someone has to wake up, log in, find the infected computer, and block it — that takes 30 minutes. With SOAR, the infected computer is automatically cut off the network in 30 seconds. The robot doesn\'t sleep.',
+    how: [
+      { step: '1', emoji: '🚨', text: 'ES detects a threat and creates a notable event' },
+      { step: '2', emoji: '🤖', text: 'SOAR picks up the alert and checks the playbook' },
+      { step: '3', emoji: '⚡', text: 'SOAR auto-blocks the bad IP, locks the account, isolates the PC' },
+      { step: '4', emoji: '📋', text: 'SOAR opens a case, notifies the team, and logs what it did' },
+    ],
+    spl: '| rest /services/saved/searches | search action.notable=1 | table title, actions'
   }
 ]
 
@@ -158,6 +179,14 @@ export default function ESUseCases() {
             <pre className="code-block mt-2 text-[10px] md:text-xs animate-fade-in">{uc.spl}</pre>
           )}
         </div>
+
+        {/* SOAR auto-response */}
+        {uc.soar && (
+          <div className="mt-4 rounded-xl p-3 md:p-4" style={{backgroundColor: '#06b6d415', border: '1px solid #06b6d430'}}>
+            <p className="text-xs font-bold mb-1" style={{color: '#06b6d4'}}>🤖 SOAR Auto-Response</p>
+            <p className="text-xs md:text-sm text-[var(--text)] leading-relaxed">{uc.soar}</p>
+          </div>
+        )}
       </div>
 
       {/* Visual: ES detection flow */}
@@ -169,7 +198,8 @@ export default function ESUseCases() {
             { emoji: '🎯', label: 'ES checks the rules', color: '#f59e0b' },
             { emoji: '🔗', label: 'Connects the dots', color: '#8b5cf6' },
             { emoji: '🚨', label: 'Alarm rings!', color: '#ef4444' },
-            { emoji: '👤', label: 'Analyst investigates', color: '#65A637' },
+            { emoji: '🤖', label: 'SOAR takes action', color: '#06b6d4' },
+            { emoji: '👤', label: 'Analyst reviews', color: '#65A637' },
           ].map((step, i, arr) => (
             <div key={i} className="flex md:flex-col items-center gap-2 md:gap-1 flex-1">
               <div className="flex items-center gap-2 md:flex-col md:gap-1 w-full">

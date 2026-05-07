@@ -63,6 +63,20 @@ const stages = [
       { icon: '⚖️', name: 'Risk Scoring', desc: 'Gives each person a danger score — too high = problem!' },
       { icon: '🔬', name: 'Threat Intel', desc: 'Checks if bad guys\' addresses show up in your logs' },
     ]
+  },
+  {
+    id: 'soar',
+    title: 'SOAR Takes Action',
+    emoji: '🤖',
+    color: '#06b6d4',
+    simple: 'SOAR is like a robot assistant that automatically does the boring work — blocking bad IPs, locking accounts, sending alerts — so humans can focus on the tricky stuff.',
+    analogy: 'ES is the alarm. SOAR is the automatic door lock that slams shut when the alarm goes off — no human needed. Like a self-driving security guard.',
+    items: [
+      { icon: '⚡', name: 'Auto-Response', desc: 'Automatically blocks bad IPs, locks accounts, isolates infected computers' },
+      { icon: '📋', name: 'Playbooks', desc: 'Step-by-step instructions the robot follows for each type of alert' },
+      { icon: '🔗', name: 'Integrations', desc: 'Talks to other tools — firewalls, email, ticketing systems' },
+      { icon: '📊', name: 'Case Management', desc: 'Tracks each incident from detection to resolution like a to-do list' },
+    ]
   }
 ]
 
